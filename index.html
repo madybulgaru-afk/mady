@@ -222,7 +222,7 @@ const state = {
   selectedAirport: 'FCO',
   completedLevels: JSON.parse(localStorage.getItem('completedLevels') || '[]'),
   departuresProgress: JSON.parse(localStorage.getItem('departuresProgress') || '[]'),
-  quizState: { currentStep: 0, feedback: null }
+  quizState: { currentStep: 0 }
 };
 
 const AIRPORTS = {
@@ -231,22 +231,51 @@ const AIRPORTS = {
   MXP: { name: 'Milano Malpensa (MXP)', terminal: 'T1 / T2', fastLiquids: true }
 };
 
-// --- CONTENUTI LIVELLI ---
+// --- TUTTE LE DOMANDE DELLE SFIDE ---
 const LEVEL_DATA = {
+  1: {
+    title: "Prepariamo le valigie",
+    questions: [
+      {
+        q: "Dove metti il tuo Power Bank (caricabatterie portatile)?",
+        options: ["🎒 Nello zaino / Bagaglio a mano", "🧳 Nella valigia grande da imbarcare", "⛔ È vietato portarlo"],
+        correct: 0,
+        explain: "Esatto! Le batterie al litio devono stare SEMPRE con te in cabina per ragioni di sicurezza."
+      },
+      {
+        q: "Vuoi portare la tua crema preferita da 150ml nel bagaglio a mano (senza scanner C3 moderni):",
+        options: ["La porto tranquillamente", "La devo mettere in boccette da max 100ml in bustina trasparente", "Non posso portarla in nessun modo"],
+        correct: 1,
+        explain: "Giusto! Nei varchi tradizionali il limite per singolo contenitore di liquidi/creme è di 100ml."
+      },
+      {
+        q: "Le forbicine da unghie o un coltellino svizzero dove vanno?",
+        options: ["Nel bagaglio a mano", "Nella valigia da stiva (o si lasciano a casa)", "In tasca nei pantaloni"],
+        correct: 1,
+        explain: "Bravissimo! Tutti gli oggetti appuntiti o taglienti vengono confiscati ai controlli se messi nel bagaglio a mano."
+      }
+    ]
+  },
   2: {
     title: "Documenti & Carte d'Imbarco",
     questions: [
       {
-        q: "Quando ti conviene fare il check-in online per farti una bella passeggiata ed evitare la fila?",
-        options: ["In aeroporto direttamente al banco", "Comodamente da casa sul cellulare 24-48 ore prima", "Mentre corri verso il gate"],
+        q: "Quando ti conviene fare il check-in online per farti una passeggiata ed evitare code?",
+        options: ["In aeroporto al banco", "Da casa sul telefono 24-48 ore prima", "Mentre sei già sulla navetta"],
         correct: 1,
-        explain: "Esatto! Facendolo prima hai la carta d'imbarco sul telefono e se hai solo il bagaglio a mano punti dritto ai controlli!"
+        explain: "Esatto! Facendolo prima hai subito il biglietto sul cellulare e vai dritto ai controlli di sicurezza."
       },
       {
-        q: "Stai per volare fuori dall'Europa: cosa controlli assolutamente prima di chiudere porta di casa?",
-        options: ["Basta la carta d'identità", "Che il Passaporto sia valido (e niente visto scaduto!)", "La tessera sanitaria"],
+        q: "Stai per volare fuori dall'Europa: cosa controlli assolutamente prima di chiudere casa?",
+        options: ["Basta la tessera sanitaria", "Che il Passaporto sia valido e non in scadenza imminente", "Il codice fiscale"],
         correct: 1,
-        explain: "Giusto! Molti paesi fuori dall'UE vogliono che il passaporto scada non prima di 3 o 6 mesi dal viaggio."
+        explain: "Giusto! Molti paesi extra-UE richiedono che il passaporto abbia almeno 3 o 6 mesi di validità residua."
+      },
+      {
+        q: "Hai salvato la carta d'imbarco sul telefono. Qual è un trucco furbissimo da fare prima di arrivare?",
+        options: ["Fare uno screenshot o salvarla nel Wallet", "Mettere il telefono in modalità aereo subito", "Cancellare le email"],
+        correct: 0,
+        explain: "Perfetto! Se in aeroporto la rete prende male o manca il Wi-Fi, lo screenshot si apre sempre all'istante."
       }
     ]
   },
@@ -255,15 +284,21 @@ const LEVEL_DATA = {
     questions: [
       {
         q: "Sei appena entrato in aeroporto. Qual è la primissima cosa da guardare sui maxischermi?",
-        options: ["Il numero del gate di imbarco", "Quale banco appartiene alla tua compagnia per la valigia", "L'orario dei voli di stasera"],
+        options: ["Il prezzo del caffè al bar", "Il tuo volo per capire il banco o la zona dei controlli di sicurezza", "I voli in arrivo"],
         correct: 1,
-        explain: "Bravissimo! Cerca il tuo volo sul tabellone per capire subito dove lasciare l'eventuale valigia da stiva o da dove muoverti."
+        explain: "Bravissimo! Cerca subito il tuo numero di volo per capire da dove muoverti."
+      },
+      {
+        q: "Ai Controlli di sicurezza tradizionale (senza scanner 3D), cosa devi tirar fuori dal bagaglio?",
+        options: ["Solo le scarpe", "Portatile, tablet e la bustina dei liquidi", "Niente, va tutto dentro"],
+        correct: 1,
+        explain: "Esatto! Nei varchi classici PC e liquidi vanno adagiati separatamente nella vaschetta."
       },
       {
         q: "Vedi scritto 'Gate Closing' o 'In Imbarco' sul tabellone: che si fa?",
-        options: ["Niente panico, c'è ancora tempo per un altro caffè", "Metti il turbo: stanno chiudendo le porte!", "Significa che il volo è stato annullato"],
+        options: ["C'è ancora tempo per fare shopping", "Metti il turbo verso il gate: le porte stanno chiudendo!", "Significa che l'aereo è già partito"],
         correct: 1,
-        explain: "Esatto! Quando il gate chiude, l'aereo non aspetta più nessuno. Solitamente chiudono 15-20 minuti prima di partire!"
+        explain: "Esatto! I gate chiudono di norma 15-20 minuti prima dell'orario di decollo."
       }
     ]
   }
@@ -271,10 +306,10 @@ const LEVEL_DATA = {
 
 const DEPARTURE_STEPS = [
   { id: 'step1', title: 'Check-in online fatto?', desc: 'Prendi la carta d\'imbarco sul telefono o salvala nel Wallet per averla al volo.' },
-  { id: 'step2', title: 'Cosa ti porti dietro?', desc: 'Dai un\'occhiata alle tasche e controlla i liquidi se non voli da un aeroporto super moderno.' },
+  { id: 'step2', title: 'Cosa ti porti dietro?', desc: 'Dai un\'occhiata alle tasche e controlla i liquidi se non voli da un aeroporto con scanner C3.' },
   { id: 'step3', title: 'In quale Terminal devi andare?', desc: 'Ad esempio a Fiumicino controlla se la tua compagnia sta al T1 o al T3.' },
   { id: 'step4', title: 'Hai una valigia grande?', desc: 'Vai dritto al banco della tua compagnia (Bag Drop) e lasciala a loro.' },
-  { id: 'step5', title: 'Controlli di sicurezza', desc: 'Tieni a portata di mano la carta d\'imbarco. A Fiumicino (T1/T3 scanner C3) non serve neanche tirar fuori PC e liquidi dallo zaino!' },
+  { id: 'step5', title: 'Controlli di sicurezza', desc: 'Tieni pronta la carta d\'imbarco. A Fiumicino (T1/T3 scanner C3) non serve neanche tirar fuori PC e liquidi dallo zaino!' },
   { id: 'step6', title: 'Direzione Gate!', desc: 'Segui i cartelli con la lettera del tuo gate, controlla gli schermi e goditi l\'attesa.' }
 ];
 
@@ -284,9 +319,10 @@ function render() {
   const app = document.getElementById('app');
   if (state.screen === 'home') app.innerHTML = renderHome();
   else if (state.screen === 'play_map') app.innerHTML = renderPlayMap();
-  else if (state.screen === 'level1') app.innerHTML = renderLevel1();
-  else if (state.screen === 'level2') app.innerHTML = renderQuizLevel(2);
-  else if (state.screen === 'level3') app.innerHTML = renderQuizLevel(3);
+  else if (state.screen.startsWith('level')) {
+    const lvlId = parseInt(state.screen.replace('level', ''));
+    app.innerHTML = renderQuizLevel(lvlId);
+  }
   else if (state.screen === 'departures_guide') app.innerHTML = renderDeparturesGuide();
 }
 
@@ -304,7 +340,7 @@ function renderHome() {
 
       <div class="option-card" onclick="setScreen('play_map')">
         <h3>1. FAI UN TEST GIOCANDO <span class="badge">Modalità Gioco</span></h3>
-        <p>Impariamo divertendoci: bagagli, documenti, controlli e arrivo al gate senza dubbi.</p>
+        <p>Impariamo divertendoci: bagagli, documenti, controlli di sicurezza e gate.</p>
       </div>
 
       <div class="option-card active" onclick="setScreen('departures_guide')">
@@ -317,9 +353,9 @@ function renderHome() {
 
 function renderPlayMap() {
   const levels = [
-    { id: 1, title: '1. Prepariamo le valigie', desc: 'Cosa metti in cabina e cosa lasci in stiva' },
+    { id: 1, title: '1. Prepariamo le valigie', desc: 'Cosa metti in cabina, cosa in stiva e i liquidi' },
     { id: 2, title: '2. Documenti pronti!', desc: 'Check-in dal telefono, passaporti ed eviti le code' },
-    { id: 3, title: '3. orientamento in aeroporto', desc: 'Leggere i tabelloni, trovare i varchi e arrivare al gate' }
+    { id: 3, title: '3. Muoversi in aeroporto', desc: 'Tabelloni, controlli di sicurezza e arrivo al gate' }
   ];
 
   return `
@@ -329,7 +365,7 @@ function renderPlayMap() {
     </header>
     <div class="content">
       <h2>I tuoi step</h2>
-      <p class="lead">Supera una sfida alla volta e diventa un viaggiatore esperto!</p>
+      <p class="lead">Supera le sfide e impara tutti i trucchi per viaggiare tranquillo!</p>
 
       ${levels.map(l => {
         const done = state.completedLevels.includes(l.id);
@@ -344,48 +380,7 @@ function renderPlayMap() {
   `;
 }
 
-// --- LIVELLO 1 (Interactive Bag Game Demo) ---
-function renderLevel1() {
-  return `
-    <header class="topbar">
-      <div class="brand"><span>Livello 1: Bagaglio</span></div>
-    </header>
-    <div class="content">
-      <h2>Dove lo cacci questo?</h2>
-      <p class="lead">Power Bank (Caricabatterie portatile)</p>
-
-      <div class="game-box" style="text-align:center">
-        <div style="font-size:4rem; margin-bottom:10px">🔋</div>
-        <p><strong>Power Bank / Batteria al Litio</strong></p>
-      </div>
-
-      <div class="quiz-options">
-        <button class="quiz-btn" onclick="checkBagAnswer(true, this)">🎒 Zaino / Bagaglio a mano</button>
-        <button class="quiz-btn" onclick="checkBagAnswer(false, this)">🧳 Nella valigia da imbarcare (Stiva)</button>
-        <button class="quiz-btn" onclick="checkBagAnswer(false, this)">⛔ Si lascia a casa, è vietato!</button>
-      </div>
-
-      <div id="bag-feedback" style="margin-top:15px"></div>
-    </div>
-    <div class="bottom-nav">
-      <button class="btn btn-ghost" onclick="setScreen('play_map')">← Mappa</button>
-    </div>
-  `;
-}
-
-function checkBagAnswer(isCorrect, btn) {
-  const feedback = document.getElementById('bag-feedback');
-  if (isCorrect) {
-    btn.classList.add('correct');
-    feedback.innerHTML = `<p style="color:#15803d; font-weight:700">Grandioso! Le batterie al litio devono stare SEMPRE con te in cabina per questioni di sicurezza in volo.</p>
-    <button class="btn btn-primary" style="margin-top:12px" onclick="completeLevel(1)">Andiamo avanti! →</button>`;
-  } else {
-    btn.classList.add('wrong');
-    feedback.innerHTML = `<p style="color:#b91c1c; font-weight:700">Ops! In stiva le batterie al litio NON possono andare mai. Rischi che ti blocchino la valigia!</p>`;
-  }
-}
-
-// --- LIVELLI 2 & 3 (Quiz Engine) ---
+// --- QUIZ ENGINE PER TUTTI I LIVELLI ---
 function renderQuizLevel(lvl) {
   const data = LEVEL_DATA[lvl];
   const qObj = data.questions[state.quizState.currentStep];
@@ -395,8 +390,8 @@ function renderQuizLevel(lvl) {
       <div class="content" style="text-align:center; padding-top:40px">
         <div style="font-size:4rem">🎉</div>
         <h2>Livello ${lvl} completato!</h2>
-        <p class="lead">Ora sai esattamente come muoverti per questa fase.</p>
-        <button class="btn btn-primary" onclick="completeLevel(${lvl})">Torna alla mappa</button>
+        <p class="lead">Ottimo lavoro! Ora conosci benissimo questo passaggio.</p>
+        <button class="btn btn-primary" onclick="completeLevel(${lvl})">Torna alla mappa sfide</button>
       </div>
     `;
   }
@@ -411,7 +406,7 @@ function renderQuizLevel(lvl) {
 
       <div class="quiz-options">
         ${qObj.options.map((opt, idx) => `
-          <button class="quiz-btn" onclick="checkQuizAnswer(${lvl},${idx}, ${qObj.correct})">${opt}</button>
+          <button class="quiz-btn" onclick="checkQuizAnswer(${lvl},${idx}, ${qObj.correct}, this)">${opt}</button>
         `).join('')}
       </div>
 
@@ -423,18 +418,20 @@ function renderQuizLevel(lvl) {
   `;
 }
 
-function checkQuizAnswer(lvl, selected, correct) {
+function checkQuizAnswer(lvl, selected, correct, btn) {
   const feedback = document.getElementById('quiz-feedback');
   const qObj = LEVEL_DATA[lvl].questions[state.quizState.currentStep];
 
   if (selected === correct) {
+    btn.classList.add('correct');
     feedback.innerHTML = `<div style="background:#dcfce7; padding:12px; border-radius:12px; color:#15803d">
       <strong>Esatto!</strong> ${qObj.explain}
     </div>
     <button class="btn btn-primary" style="margin-top:12px" onclick="nextQuizStep()">Prossima domanda →</button>`;
   } else {
+    btn.classList.add('wrong');
     feedback.innerHTML = `<div style="background:#fee2e2; padding:12px; border-radius:12px; color:#b91c1c">
-      <strong>Quasi!</strong> Riprova, ci sei quasi.
+      <strong>Ops!</strong> Riprova, l'opzione giusta è un'altra.
     </div>`;
   }
 }
