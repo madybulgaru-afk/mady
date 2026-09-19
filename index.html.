@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#07152f" />
+  <title>Pronto a partire? - Aeroporto Helper</title>
+  <style>
+    :root {
+      --navy: #07152f;
+      --navy-light: #102a5c;
+      --accent: #22c7b8;
+      --accent-dark: #11a89b;
+      --bg: #f4f8fb;
+      --card-bg: #ffffff;
+      --text: #0b1630;
+      --muted: #5c6b7c;
+      --line: #dce6ee;
+      --success: #167f64;
+      --warning: #d97706;
+      --radius: 20px;
+      --shadow: 0 10px 30px rgba(7, 21, 47, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 40px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    /* Topbar */
+    .topbar {
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--navy);
+      color: #fff;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+    }
+
+    /* Content Area */
+    .content {
+      padding: 20px;
+      flex: 1;
+      padding-bottom: 90px;
+    }
+
+    h1 { font-size: 2.1rem; letter-spacing: -0.04em; margin-bottom: 8px; line-height: 1.1; }
+    h2 { font-size: 1.5rem; letter-spacing: -0.03em; margin-bottom: 12px; }
+    p.lead { font-size: 1rem; color: var(--muted); margin-bottom: 20px; line-height: 1.4; }
+
+    /* Buttons & CTAs */
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 16px;
+      border: none;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.1s, background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--navy); color: #fff; }
+    .btn-secondary { background: #e8f8f5; color: var(--accent-dark); }
+    .btn-outline { background: transparent; border: 2px solid var(--line); color: var(--text); }
+    .btn-ghost { background: #eff4f7; color: var(--navy); }
+
+    /* Cards & Options */
+    .option-card {
+      background: #fff;
+      border: 2px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 14px;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .option-card:hover, .option-card.active {
+      border-color: var(--accent);
+      box-shadow: var(--shadow);
+    }
+    .option-card h3 { font-size: 1.1rem; margin-bottom: 4px; display: flex; justify-content: space-between; }
+    .option-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.3; }
+    .badge {
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 20px;
+      background: #e0f2fe;
+      color: #0369a1;
+      font-weight: 700;
+    }
+
+    /* Game / Quiz Elements */
+    .game-box {
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid var(--line);
+      margin-top: 15px;
+    }
+    .quiz-options { display: grid; gap: 10px; margin-top: 15px; }
+    .quiz-btn {
+      background: #fff;
+      border: 1.5px solid var(--line);
+      padding: 14px;
+      border-radius: 14px;
+      text-align: left;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .quiz-btn.correct { background: #dcfce7; border-color: #22c55e; color: #15803d; }
+    .quiz-btn.wrong { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
+
+    /* Checklist Mode (Sto Partendo) */
+    .checklist-step {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .check-box {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      border: 2px solid var(--line);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .checklist-step.done .check-box {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .checklist-step.done .step-text {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: min(480px, 100%);
+      padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--line);
+      display: flex;
+      gap: 10px;
+      z-index: 30;
+    }
+
+    /* Select Aeroporto */
+    .airport-select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell" id="app">
+  <!-- Il contenuto viene iniettato dinamicamente da JavaScript -->
+</div>
+
+<script>
+// --- STATO DELL'APPLICAZIONE ---
+const state = {
+  screen: 'home', // home, play_map, level1, level2, level3, departures_guide
+  selectedAirport: 'FCO',
+  completedLevels: JSON.parse(localStorage.getItem('completedLevels') || '[]'),
+  departuresProgress: JSON.parse(localStorage.getItem('departuresProgress') || '[]'),
+  quizState: { currentStep: 0, feedback: null }
+};
+
+const AIRPORTS = {
+  FCO: { name: 'Roma Fiumicino (FCO)', terminal: 'T1 / T3', fastLiquids: true },
+  CIA: { name: 'Roma Ciampino (CIA)', terminal: 'T1', fastLiquids: false },
+  MXP: { name: 'Milano Malpensa (MXP)', terminal: 'T1 / T2', fastLiquids: true }
+};
+
+// --- CONTENUTI LIVELLI ---
+const LEVEL_DATA = {
+  2: {
+    title: "Documenti & Carta d'Imbarco",
+    questions: [
+      {
+        q: "Quando è consigliabile fare il check-in online per evitare file?",
+        options: ["In aeroporto al banco", "24-48 ore prima da casa o smartphone", "Mentre sei al gate"],
+        correct: 1,
+        explain: "Il check-in online ti permette di ottenere la carta d'imbarco sul telefono ed saltare la coda ai banchi se hai solo il bagaglio a mano!"
+      },
+      {
+        q: "Cosa devi controllare prima di uscire di casa per un volo extra-UE?",
+        options: ["Solo la carta d'identità", "La validità residua del Passaporto e requisiti Visto", "La tessera sanitaria"],
+        correct: 1,
+        explain: "Molti paesi richiedono che il passaporto abbia almeno 3 o 6 mesi di validità residua."
+      }
+    ]
+  },
+  3: {
+    title: "Orientamento & Terminal",
+    questions: [
+      {
+        q: "Arrivi in aeroporto. Qual è la prima cosa da verificare sui monitor (FIDS)?",
+        options: ["Il numero del gate di imbarco", "I banchi Check-in / Bag Drop dedicati al tuo volo", "L'orario dell'ultimo volo della giornata"],
+        correct: 1,
+        explain: "Appena arrivato, controlla i monitor per sapere a quale banco consegnare i bagagli o se ci sono indicazioni sul Terminal."
+      },
+      {
+        q: "Cosa significa 'Gate Closing' sul tabellone?",
+        options: ["Che l'aereo è già partito", "Che l'imbarco sta per terminare e devi affrettarti", "Che il volo è cancellato"],
+        correct: 1,
+        explain: "Il gate chiude solitamente 15-20 minuti prima dell'orario di partenza previsto."
+      }
+    ]
+  }
+};
+
+const DEPARTURE_STEPS = [
+  { id: 'step1', title: 'Check-in Online & Carta d\'Imbarco', desc: 'Scarica il biglietto sul telefono o salvalo nel Wallet.' },
+  { id: 'step2', title: 'Controllo Documenti e Bagagli', desc: 'Verifica dimensioni bagaglio a mano e liquidi in contenitori da max 100ml (se applicabile).' },
+  { id: 'step3', title: 'Arrivo al Terminal corretto', desc: 'Controlla se il tuo volo parte dal T1 o T3 (a Fiumicino).' },
+  { id: 'step4', title: 'Consegna Bagaglio (Bag Drop)', desc: 'Se hai una valigia da stiva, vai ai banchi dedicati alla tua compagnia.' },
+  { id: 'step5', title: 'Controlli di Sicurezza', desc: 'Prepara carta d\'imbarco. A Fiumicino (T1/T3 scanner C3) non serve estrarre liquidi e PC dai bagagli!' },
+  { id: 'step6', title: 'Raggiungi il Gate e Attendi l\'Imbarco', desc: 'Segui le indicazioni per il tuo gate e fai attenzione agli annunci.' }
+];
+
+// --- FUNZIONI DI RENDER ---
+
+function render() {
+  const app = document.getElementById('app');
+  if (state.screen === 'home') app.innerHTML = renderHome();
+  else if (state.screen === 'play_map') app.innerHTML = renderPlayMap();
+  else if (state.screen === 'level1') app.innerHTML = renderLevel1();
+  else if (state.screen === 'level2') app.innerHTML = renderQuizLevel(2);
+  else if (state.screen === 'level3') app.innerHTML = renderQuizLevel(3);
+  else if (state.screen === 'departures_guide') app.innerHTML = renderDeparturesGuide();
+}
+
+function renderHome() {
+  return `
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-icon">✈</div>
+        <span>Pronto a partire?</span>
+      </div>
+    </header>
+    <div class="content">
+      <h1>Impara a volare senza stress</h1>
+      <p class="lead">Scegli la modalità che preferisci per iniziare.</p>
+
+      <div class="option-card" onclick="setScreen('play_map')">
+        <h3>1. GIOCA & IMPARA <span class="badge">Modalità Gioco</span></h3>
+        <p>Avanza livello per livello. Impara a gestire bagagli, documenti, controlli e gate.</p>
+      </div>
+
+      <div class="option-card active" onclick="setScreen('departures_guide')">
+        <h3>2. STO PARTENDO <span class="badge" style="background:#dcfce7; color:#15803d">Guida Reale</span></h3>
+        <p>Sei in viaggio? Segui la checklist passo-passo dal check-in al gate per il tuo aeroporto.</p>
+      </div>
+    </div>
+  `;
+}
+
+function renderPlayMap() {
+  const levels = [
+    { id: 1, title: '1. Preparazione Bagaglio', desc: 'Cabina, stiva, liquidi e regole' },
+    { id: 2, title: '2. Documenti & Carte d\'Imbarco', desc: 'Check-in online e orari' },
+    { id: 3, title: '3. Orientamento in Aeroporto', desc: 'Terminal, monitor e gate' }
+  ];
+
+  return `
+    <header class="topbar">
+      <div class="brand"><span>Mappa Livelli</span></div>
+      <button class="btn btn-ghost" style="width:auto; padding:8px 12px" onclick="setScreen('home')">Chiudi</button>
+    </header>
+    <div class="content">
+      <h2>Percorso di Apprendimento</h2>
+      <p class="lead">Completa i moduli per padroneggiare ogni fase del volo.</p>
+
+      ${levels.map(l => {
+        const done = state.completedLevels.includes(l.id);
+        return `
+          <div class="option-card" onclick="startLevel(${l.id})">
+            <h3>${l.title}${done ? '✅' : ''}</h3>
+            <p>${l.desc}</p>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+// --- LIVELLO 1 (Interactive Bag Game Demo) ---
+function renderLevel1() {
+  return `
+    <header class="topbar">
+      <div class="brand"><span>Livello 1: Bagaglio</span></div>
+    </header>
+    <div class="content">
+      <h2>Dove va questo oggetto?</h2>
+      <p class="lead">Power Bank (Batteria Portatile al Litio)</p>
+
+      <div class="game-box" style="text-align:center">
+        <div style="font-size:4rem; margin-bottom:10px">🔋</div>
+        <p><strong>Power Bank / Batteria di Riserva</strong></p>
+      </div>
+
+      <div class="quiz-options">
+        <button class="quiz-btn" onclick="checkBagAnswer(true, this)">🎒 Bagaglio a Mano (Cabina)</button>
+        <button class="quiz-btn" onclick="checkBagAnswer(false, this)">🧳 Valigia da Stiva</button>
+        <button class="quiz-btn" onclick="checkBagAnswer(false, this)">⛔ Vietato in Aereo</button>
+      </div>
+
+      <div id="bag-feedback" style="margin-top:15px"></div>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn btn-ghost" onclick="setScreen('play_map')">← Mappa</button>
+    </div>
+  `;
+}
+
+function checkBagAnswer(isCorrect, btn) {
+  const feedback = document.getElementById('bag-feedback');
+  if (isCorrect) {
+    btn.classList.add('correct');
+    feedback.innerHTML = `<p style="color:#15803d; font-weight:700">Corretto! Le batterie al litio di ricambio devono viaggiare SEMPRE nel bagaglio a mano per prevenire incendi in stiva.</p>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="completeLevel(1)">Completa Livello 1 →</button>`;
+  } else {
+    btn.classList.add('wrong');
+    feedback.innerHTML = `<p style="color:#b91c1c; font-weight:700">Sbagliato! Le batterie di ricambio NON possono andare in stiva per norme internazionali IATA.</p>`;
+  }
+}
+
+// --- LIVELLI 2 & 3 (Quiz Engine) ---
+function renderQuizLevel(lvl) {
+  const data = LEVEL_DATA[lvl];
+  const qObj = data.questions[state.quizState.currentStep];
+
+  if (!qObj) {
+    return `
+      <div class="content" style="text-align:center; padding-top:40px">
+        <div style="font-size:4rem">🎉</div>
+        <h2>Livello ${lvl} Completato!</h2>
+        <p class="lead">Hai imparato i concetti chiave di questa fase.</p>
+        <button class="btn btn-primary" onclick="completeLevel(${lvl})">Torna alla Mappa</button>
+      </div>
+    `;
+  }
+
+  return `
+    <header class="topbar">
+      <div class="brand"><span>Livello ${lvl}: ${data.title}</span></div>
+    </header>
+    <div class="content">
+      <p style="font-size:0.85rem; color:var(--muted); font-weight:700">DOMANDA ${state.quizState.currentStep + 1} DI ${data.questions.length}</p>
+      <h2 style="margin-top:8px">${qObj.q}</h2>
+
+      <div class="quiz-options">
+        ${qObj.options.map((opt, idx) => `
+          <button class="quiz-btn" onclick="checkQuizAnswer(${lvl},${idx}, ${qObj.correct})">${opt}</button>
+        `).join('')}
+      </div>
+
+      <div id="quiz-feedback" style="margin-top:15px"></div>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn btn-ghost" onclick="setScreen('play_map')">Esci</button>
+    </div>
+  `;
+}
+
+function checkQuizAnswer(lvl, selected, correct) {
+  const feedback = document.getElementById('quiz-feedback');
+  const qObj = LEVEL_DATA[lvl].questions[state.quizState.currentStep];
+
+  if (selected === correct) {
+    feedback.innerHTML = `<div style="background:#dcfce7; padding:12px; border-radius:12px; color:#15803d">
+      <strong>Esatto!</strong> ${qObj.explain}
+    </div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="nextQuizStep()">Prossima Domanda →</button>`;
+  } else {
+    feedback.innerHTML = `<div style="background:#fee2e2; padding:12px; border-radius:12px; color:#b91c1c">
+      <strong>Non esattamente.</strong> Riprova!
+    </div>`;
+  }
+}
+
+function nextQuizStep() {
+  state.quizState.currentStep++;
+  render();
+}
+
+// --- MODALITÀ "STO PARTENDO" ---
+function renderDeparturesGuide() {
+  const ap = AIRPORTS[state.selectedAirport];
+
+  return `
+    <header class="topbar">
+      <div class="brand"><span>Assistente Partenza</span></div>
+      <button class="btn btn-ghost" style="width:auto; padding:8px 12px" onclick="setScreen('home')">Home</button>
+    </header>
+    <div class="content">
+      <label style="font-size:0.85rem; font-weight:700; color:var(--muted)">SELEZIONA AEROPORTO:</label>
+      <select class="airport-select" onchange="changeAirport(this.value)">
+        ${Object.keys(AIRPORTS).map(k => `<option value="${k}" ${k===state.selectedAirport?'selected':''}>${AIRPORTS[k].name}</option>`).join('')}
+      </select>
+
+      <h2>I tuoi passi per il Gate</h2>
+      <p class="lead">Spunta i passaggi mentre li completi.</p>
+
+      ${DEPARTURE_STEPS.map((step, idx) => {
+        const isDone = state.departuresProgress.includes(step.id);
+        return `
+          <div class="checklist-step ${isDone ? 'done' : ''}" onclick="toggleChecklist('${step.id}')">
+            <div class="check-box">${isDone ? '✓' : ''}</div>
+            <div>
+              <strong class="step-text">${idx + 1}.${step.title}</strong>
+              <p style="font-size:0.85rem; color:var(--muted); margin-top:4px">${step.desc}</p>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+// --- LOGICA E NAVIGAZIONE ---
+function setScreen(screenName) {
+  state.screen = screenName;
+  state.quizState.currentStep = 0;
+  render();
+  window.scrollTo(0,0);
+}
+
+function startLevel(lvl) {
+  state.quizState.currentStep = 0;
+  setScreen('level' + lvl);
+}
+
+function completeLevel(lvl) {
+  if (!state.completedLevels.includes(lvl)) {
+    state.completedLevels.push(lvl);
+    localStorage.setItem('completedLevels', JSON.stringify(state.completedLevels));
+  }
+  setScreen('play_map');
+}
+
+function toggleChecklist(stepId) {
+  if (state.departuresProgress.includes(stepId)) {
+    state.departuresProgress = state.departuresProgress.filter(id => id !== stepId);
+  } else {
+    state.departuresProgress.push(stepId);
+  }
+  localStorage.setItem('departuresProgress', JSON.stringify(state.departuresProgress));
+  render();
+}
+
+function changeAirport(code) {
+  state.selectedAirport = code;
+  render();
+}
+
+// Inizializzazione
+render();
+</script>
+</body>
+</html>
