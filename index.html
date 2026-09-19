@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#07152f" />
-  <title>Pronto a partire? - Aeroporto Helper</title>
+  <title>Pronto a partire? - Volare facile</title>
   <style>
     :root {
       --navy: #07152f;
@@ -213,13 +213,12 @@
 <body>
 
 <div class="app-shell" id="app">
-  <!-- Il contenuto viene iniettato dinamicamente da JavaScript -->
 </div>
 
 <script>
 // --- STATO DELL'APPLICAZIONE ---
 const state = {
-  screen: 'home', // home, play_map, level1, level2, level3, departures_guide
+  screen: 'home',
   selectedAirport: 'FCO',
   completedLevels: JSON.parse(localStorage.getItem('completedLevels') || '[]'),
   departuresProgress: JSON.parse(localStorage.getItem('departuresProgress') || '[]'),
@@ -235,48 +234,48 @@ const AIRPORTS = {
 // --- CONTENUTI LIVELLI ---
 const LEVEL_DATA = {
   2: {
-    title: "Documenti & Carta d'Imbarco",
+    title: "Documenti & Carte d'Imbarco",
     questions: [
       {
-        q: "Quando è consigliabile fare il check-in online per evitare file?",
-        options: ["In aeroporto al banco", "24-48 ore prima da casa o smartphone", "Mentre sei al gate"],
+        q: "Quando ti conviene fare il check-in online per farti una bella passeggiata ed evitare la fila?",
+        options: ["In aeroporto direttamente al banco", "Comodamente da casa sul cellulare 24-48 ore prima", "Mentre corri verso il gate"],
         correct: 1,
-        explain: "Il check-in online ti permette di ottenere la carta d'imbarco sul telefono ed saltare la coda ai banchi se hai solo il bagaglio a mano!"
+        explain: "Esatto! Facendolo prima hai la carta d'imbarco sul telefono e se hai solo il bagaglio a mano punti dritto ai controlli!"
       },
       {
-        q: "Cosa devi controllare prima di uscire di casa per un volo extra-UE?",
-        options: ["Solo la carta d'identità", "La validità residua del Passaporto e requisiti Visto", "La tessera sanitaria"],
+        q: "Stai per volare fuori dall'Europa: cosa controlli assolutamente prima di chiudere porta di casa?",
+        options: ["Basta la carta d'identità", "Che il Passaporto sia valido (e niente visto scaduto!)", "La tessera sanitaria"],
         correct: 1,
-        explain: "Molti paesi richiedono che il passaporto abbia almeno 3 o 6 mesi di validità residua."
+        explain: "Giusto! Molti paesi fuori dall'UE vogliono che il passaporto scada non prima di 3 o 6 mesi dal viaggio."
       }
     ]
   },
   3: {
-    title: "Orientamento & Terminal",
+    title: "Muoversi in Aeroporto",
     questions: [
       {
-        q: "Arrivi in aeroporto. Qual è la prima cosa da verificare sui monitor (FIDS)?",
-        options: ["Il numero del gate di imbarco", "I banchi Check-in / Bag Drop dedicati al tuo volo", "L'orario dell'ultimo volo della giornata"],
+        q: "Sei appena entrato in aeroporto. Qual è la primissima cosa da guardare sui maxischermi?",
+        options: ["Il numero del gate di imbarco", "Quale banco appartiene alla tua compagnia per la valigia", "L'orario dei voli di stasera"],
         correct: 1,
-        explain: "Appena arrivato, controlla i monitor per sapere a quale banco consegnare i bagagli o se ci sono indicazioni sul Terminal."
+        explain: "Bravissimo! Cerca il tuo volo sul tabellone per capire subito dove lasciare l'eventuale valigia da stiva o da dove muoverti."
       },
       {
-        q: "Cosa significa 'Gate Closing' sul tabellone?",
-        options: ["Che l'aereo è già partito", "Che l'imbarco sta per terminare e devi affrettarti", "Che il volo è cancellato"],
+        q: "Vedi scritto 'Gate Closing' o 'In Imbarco' sul tabellone: che si fa?",
+        options: ["Niente panico, c'è ancora tempo per un altro caffè", "Metti il turbo: stanno chiudendo le porte!", "Significa che il volo è stato annullato"],
         correct: 1,
-        explain: "Il gate chiude solitamente 15-20 minuti prima dell'orario di partenza previsto."
+        explain: "Esatto! Quando il gate chiude, l'aereo non aspetta più nessuno. Solitamente chiudono 15-20 minuti prima di partire!"
       }
     ]
   }
 };
 
 const DEPARTURE_STEPS = [
-  { id: 'step1', title: 'Check-in Online & Carta d\'Imbarco', desc: 'Scarica il biglietto sul telefono o salvalo nel Wallet.' },
-  { id: 'step2', title: 'Controllo Documenti e Bagagli', desc: 'Verifica dimensioni bagaglio a mano e liquidi in contenitori da max 100ml (se applicabile).' },
-  { id: 'step3', title: 'Arrivo al Terminal corretto', desc: 'Controlla se il tuo volo parte dal T1 o T3 (a Fiumicino).' },
-  { id: 'step4', title: 'Consegna Bagaglio (Bag Drop)', desc: 'Se hai una valigia da stiva, vai ai banchi dedicati alla tua compagnia.' },
-  { id: 'step5', title: 'Controlli di Sicurezza', desc: 'Prepara carta d\'imbarco. A Fiumicino (T1/T3 scanner C3) non serve estrarre liquidi e PC dai bagagli!' },
-  { id: 'step6', title: 'Raggiungi il Gate e Attendi l\'Imbarco', desc: 'Segui le indicazioni per il tuo gate e fai attenzione agli annunci.' }
+  { id: 'step1', title: 'Check-in online fatto?', desc: 'Prendi la carta d\'imbarco sul telefono o salvala nel Wallet per averla al volo.' },
+  { id: 'step2', title: 'Cosa ti porti dietro?', desc: 'Dai un\'occhiata alle tasche e controlla i liquidi se non voli da un aeroporto super moderno.' },
+  { id: 'step3', title: 'In quale Terminal devi andare?', desc: 'Ad esempio a Fiumicino controlla se la tua compagnia sta al T1 o al T3.' },
+  { id: 'step4', title: 'Hai una valigia grande?', desc: 'Vai dritto al banco della tua compagnia (Bag Drop) e lasciala a loro.' },
+  { id: 'step5', title: 'Controlli di sicurezza', desc: 'Tieni a portata di mano la carta d\'imbarco. A Fiumicino (T1/T3 scanner C3) non serve neanche tirar fuori PC e liquidi dallo zaino!' },
+  { id: 'step6', title: 'Direzione Gate!', desc: 'Segui i cartelli con la lettera del tuo gate, controlla gli schermi e goditi l\'attesa.' }
 ];
 
 // --- FUNZIONI DI RENDER ---
@@ -300,17 +299,17 @@ function renderHome() {
       </div>
     </header>
     <div class="content">
-      <h1>Impara a volare senza stress</h1>
-      <p class="lead">Scegli la modalità che preferisci per iniziare.</p>
+      <h1>Prendere l'aereo senza impazzire</h1>
+      <p class="lead">Scegli come vuoi muoverti oggi:</p>
 
       <div class="option-card" onclick="setScreen('play_map')">
-        <h3>1. GIOCA & IMPARA <span class="badge">Modalità Gioco</span></h3>
-        <p>Avanza livello per livello. Impara a gestire bagagli, documenti, controlli e gate.</p>
+        <h3>1. FAI UN TEST GIOCANDO <span class="badge">Modalità Gioco</span></h3>
+        <p>Impariamo divertendoci: bagagli, documenti, controlli e arrivo al gate senza dubbi.</p>
       </div>
 
       <div class="option-card active" onclick="setScreen('departures_guide')">
-        <h3>2. STO PARTENDO <span class="badge" style="background:#dcfce7; color:#15803d">Guida Reale</span></h3>
-        <p>Sei in viaggio? Segui la checklist passo-passo dal check-in al gate per il tuo aeroporto.</p>
+        <h3>2. STO PARTENDO ADESSO <span class="badge" style="background:#dcfce7; color:#15803d">Guida Reale</span></h3>
+        <p>Sei già in viaggio? Ti drivo passo-passo da casa fino alla poltrona dell'aereo.</p>
       </div>
     </div>
   `;
@@ -318,19 +317,19 @@ function renderHome() {
 
 function renderPlayMap() {
   const levels = [
-    { id: 1, title: '1. Preparazione Bagaglio', desc: 'Cabina, stiva, liquidi e regole' },
-    { id: 2, title: '2. Documenti & Carte d\'Imbarco', desc: 'Check-in online e orari' },
-    { id: 3, title: '3. Orientamento in Aeroporto', desc: 'Terminal, monitor e gate' }
+    { id: 1, title: '1. Prepariamo le valigie', desc: 'Cosa metti in cabina e cosa lasci in stiva' },
+    { id: 2, title: '2. Documenti pronti!', desc: 'Check-in dal telefono, passaporti ed eviti le code' },
+    { id: 3, title: '3. orientamento in aeroporto', desc: 'Leggere i tabelloni, trovare i varchi e arrivare al gate' }
   ];
 
   return `
     <header class="topbar">
-      <div class="brand"><span>Mappa Livelli</span></div>
-      <button class="btn btn-ghost" style="width:auto; padding:8px 12px" onclick="setScreen('home')">Chiudi</button>
+      <div class="brand"><span>Scegli il livello</span></div>
+      <button class="btn btn-ghost" style="width:auto; padding:8px 12px" onclick="setScreen('home')">Indietro</button>
     </header>
     <div class="content">
-      <h2>Percorso di Apprendimento</h2>
-      <p class="lead">Completa i moduli per padroneggiare ogni fase del volo.</p>
+      <h2>I tuoi step</h2>
+      <p class="lead">Supera una sfida alla volta e diventa un viaggiatore esperto!</p>
 
       ${levels.map(l => {
         const done = state.completedLevels.includes(l.id);
@@ -352,18 +351,18 @@ function renderLevel1() {
       <div class="brand"><span>Livello 1: Bagaglio</span></div>
     </header>
     <div class="content">
-      <h2>Dove va questo oggetto?</h2>
-      <p class="lead">Power Bank (Batteria Portatile al Litio)</p>
+      <h2>Dove lo cacci questo?</h2>
+      <p class="lead">Power Bank (Caricabatterie portatile)</p>
 
       <div class="game-box" style="text-align:center">
         <div style="font-size:4rem; margin-bottom:10px">🔋</div>
-        <p><strong>Power Bank / Batteria di Riserva</strong></p>
+        <p><strong>Power Bank / Batteria al Litio</strong></p>
       </div>
 
       <div class="quiz-options">
-        <button class="quiz-btn" onclick="checkBagAnswer(true, this)">🎒 Bagaglio a Mano (Cabina)</button>
-        <button class="quiz-btn" onclick="checkBagAnswer(false, this)">🧳 Valigia da Stiva</button>
-        <button class="quiz-btn" onclick="checkBagAnswer(false, this)">⛔ Vietato in Aereo</button>
+        <button class="quiz-btn" onclick="checkBagAnswer(true, this)">🎒 Zaino / Bagaglio a mano</button>
+        <button class="quiz-btn" onclick="checkBagAnswer(false, this)">🧳 Nella valigia da imbarcare (Stiva)</button>
+        <button class="quiz-btn" onclick="checkBagAnswer(false, this)">⛔ Si lascia a casa, è vietato!</button>
       </div>
 
       <div id="bag-feedback" style="margin-top:15px"></div>
@@ -378,11 +377,11 @@ function checkBagAnswer(isCorrect, btn) {
   const feedback = document.getElementById('bag-feedback');
   if (isCorrect) {
     btn.classList.add('correct');
-    feedback.innerHTML = `<p style="color:#15803d; font-weight:700">Corretto! Le batterie al litio di ricambio devono viaggiare SEMPRE nel bagaglio a mano per prevenire incendi in stiva.</p>
-    <button class="btn btn-primary" style="margin-top:12px" onclick="completeLevel(1)">Completa Livello 1 →</button>`;
+    feedback.innerHTML = `<p style="color:#15803d; font-weight:700">Grandioso! Le batterie al litio devono stare SEMPRE con te in cabina per questioni di sicurezza in volo.</p>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="completeLevel(1)">Andiamo avanti! →</button>`;
   } else {
     btn.classList.add('wrong');
-    feedback.innerHTML = `<p style="color:#b91c1c; font-weight:700">Sbagliato! Le batterie di ricambio NON possono andare in stiva per norme internazionali IATA.</p>`;
+    feedback.innerHTML = `<p style="color:#b91c1c; font-weight:700">Ops! In stiva le batterie al litio NON possono andare mai. Rischi che ti blocchino la valigia!</p>`;
   }
 }
 
@@ -395,16 +394,16 @@ function renderQuizLevel(lvl) {
     return `
       <div class="content" style="text-align:center; padding-top:40px">
         <div style="font-size:4rem">🎉</div>
-        <h2>Livello ${lvl} Completato!</h2>
-        <p class="lead">Hai imparato i concetti chiave di questa fase.</p>
-        <button class="btn btn-primary" onclick="completeLevel(${lvl})">Torna alla Mappa</button>
+        <h2>Livello ${lvl} completato!</h2>
+        <p class="lead">Ora sai esattamente come muoverti per questa fase.</p>
+        <button class="btn btn-primary" onclick="completeLevel(${lvl})">Torna alla mappa</button>
       </div>
     `;
   }
 
   return `
     <header class="topbar">
-      <div class="brand"><span>Livello ${lvl}: ${data.title}</span></div>
+      <div class="brand"><span>${data.title}</span></div>
     </header>
     <div class="content">
       <p style="font-size:0.85rem; color:var(--muted); font-weight:700">DOMANDA ${state.quizState.currentStep + 1} DI ${data.questions.length}</p>
@@ -432,10 +431,10 @@ function checkQuizAnswer(lvl, selected, correct) {
     feedback.innerHTML = `<div style="background:#dcfce7; padding:12px; border-radius:12px; color:#15803d">
       <strong>Esatto!</strong> ${qObj.explain}
     </div>
-    <button class="btn btn-primary" style="margin-top:12px" onclick="nextQuizStep()">Prossima Domanda →</button>`;
+    <button class="btn btn-primary" style="margin-top:12px" onclick="nextQuizStep()">Prossima domanda →</button>`;
   } else {
     feedback.innerHTML = `<div style="background:#fee2e2; padding:12px; border-radius:12px; color:#b91c1c">
-      <strong>Non esattamente.</strong> Riprova!
+      <strong>Quasi!</strong> Riprova, ci sei quasi.
     </div>`;
   }
 }
@@ -451,17 +450,17 @@ function renderDeparturesGuide() {
 
   return `
     <header class="topbar">
-      <div class="brand"><span>Assistente Partenza</span></div>
+      <div class="brand"><span>Guida in tempo reale</span></div>
       <button class="btn btn-ghost" style="width:auto; padding:8px 12px" onclick="setScreen('home')">Home</button>
     </header>
     <div class="content">
-      <label style="font-size:0.85rem; font-weight:700; color:var(--muted)">SELEZIONA AEROPORTO:</label>
+      <label style="font-size:0.85rem; font-weight:700; color:var(--muted)">DA DOVE PARTE IL TUO VOLO?</label>
       <select class="airport-select" onchange="changeAirport(this.value)">
         ${Object.keys(AIRPORTS).map(k => `<option value="${k}" ${k===state.selectedAirport?'selected':''}>${AIRPORTS[k].name}</option>`).join('')}
       </select>
 
-      <h2>I tuoi passi per il Gate</h2>
-      <p class="lead">Spunta i passaggi mentre li completi.</p>
+      <h2>I tuoi passi verso l'aereo</h2>
+      <p class="lead">Spunta le voci man mano che le completi in aeroporto:</p>
 
       ${DEPARTURE_STEPS.map((step, idx) => {
         const isDone = state.departuresProgress.includes(step.id);
