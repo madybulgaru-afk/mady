@@ -61,7 +61,6 @@
       overflow-y: auto;
     }
 
-    /* BARRA DI PROGRESSO */
     .top-progress {
       display: flex;
       align-items: center;
@@ -91,7 +90,6 @@
       color: var(--navy);
     }
 
-    /* HOME SCREEN */
     .home-screen {
       display: flex;
       flex-direction: column;
@@ -116,14 +114,15 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-top: 20px;
+      margin-top: 10px;
     }
 
-    /* LOGO ESATTO COME DA FOTO */
-    .plane-logo-svg {
-      width: 110px;
-      height: 65px;
-      margin-bottom: 14px;
+    /* IMMAGINE DEL LOGO CARICATA DA TE */
+    .app-logo-img {
+      width: 140px;
+      height: auto;
+      margin-bottom: 10px;
+      object-fit: contain;
     }
 
     .app-title {
@@ -136,7 +135,7 @@
     .app-tagline {
       font-size: 1.05rem;
       color: var(--text-muted);
-      margin-top: 6px;
+      margin-top: 4px;
       font-weight: 500;
     }
 
@@ -148,7 +147,6 @@
       margin-bottom: 10px;
     }
 
-    /* PULSANTI STILE FOTO */
     .btn-pill {
       width: 100%;
       padding: 16px 24px;
@@ -202,7 +200,6 @@
       font-weight: bold;
     }
 
-    /* CONTENUTO GIOCO */
     .game-screen {
       display: none;
       flex-direction: column;
@@ -309,13 +306,8 @@
       <div class="subtitle-tag">VERSIONE FIUMICINO FCO</div>
 
       <div class="logo-container">
-        <!-- LOGO VETTORIALE IDENTICO ALLA FOTO -->
-        <svg class="plane-logo-svg" viewBox="0 0 120 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Sagoma aereo elegante in volo -->
-          <path d="M15 42 L52 28 L98 12 C103 10 108 14 105 18 L85 30 L102 33 C106 33 108 36 106 38 L98 44 L72 40 L45 55 L35 55 L47 40 L18 43 Z" fill="#0e2a4a"/>
-          <!-- Linea orizzontale tipica sotto il logo -->
-          <rect x="20" y="62" width="80" height="4" rx="2" fill="#0e2a4a"/>
-        </svg>
+        <!-- Usa direttamente il logo caricato da te come logo.png -->
+        <img src="logo.png" alt="Facile Volare Logo" class="app-logo-img">
         <h1 class="app-title">Facile Volare</h1>
         <p class="app-tagline">Verso il gate, senza stress.</p>
       </div>
@@ -458,7 +450,7 @@
       visual: null,
       options: [
         { text: "Controllo subito sulla mia carta d'imbarco", correct: true, feedback: "✅ Esatto! C'è scritto chiaramente il Terminal di partenza." },
-        { text: "Entro nel primo che trovo a caso", correct: false, feedback: "⛔ Perdi solo tempo prezioso a camminare." }
+        { text: "Entro nel primeiro che trovo a caso", correct: false, feedback: "⛔ Perdi solo tempo prezioso a camminare." }
       ]
     },
     {
@@ -496,4 +488,173 @@
     {
       mission: "MISSIONE 6 · Controlli di Sicurezza",
       title: "Tasche Rigorosamente Vuote",
-      text: "L'addetto rip
+      text: "L'addetto ripete: 'Svuotate le tasche'. Cosa va tolto?",
+      visual: null,
+      options: [
+        { text: "TUTTO! Cellulare, sigarette, accendino, Oki, caramelle, fazzoletti... zero oggetti!", correct: true, feedback: "✅ Perfetto! Tasche vuote a zero. Niente scuse di plastica o carta." },
+        { text: "Solo il metallo pesante", correct: false, feedback: "⛔ Tutto il resto fa scattare la perquisizione manuale!" }
+      ]
+    },
+    {
+      mission: "MISSIONE 6 · Controlli di Sicurezza",
+      title: "La Vaschetta Perfetta",
+      text: "Ti accomodi alla postazione. Come usi la vaschetta?",
+      visual: "📥 POSTAZIONE VASCHETTE",
+      options: [
+        { text: "La sfilo da sotto, la appoggio sul piano, la riempio e poi la spingo sui rulli", correct: true, feedback: "✅ Sequenza impeccabile! Mai metterla direttamente sui rulli mentre la riempi." },
+        { text: "La piazzo subito sui rulli in movimento", correct: false, feedback: "⛔ Blocchi chi c'è prima e rischi di far cadere la roba." }
+      ]
+    },
+    {
+      mission: "MISSIONE 6 · Controlli di Sicurezza",
+      title: "Il Falso Mito dell'Acqua a Fiumicino",
+      text: "Hai con te una bottiglietta d'acqua. A Fiumicino (T1 e T3) cosa succede?",
+      visual: null,
+      options: [
+        { text: "Grazie ai nuovi scanner passano anche bottiglie fino a 2 litri!", correct: true, feedback: "✅ Esatto! A Fiumicino i nuovi varchi ti permettono di tenere i liquidi." },
+        { text: "Va buttata tassativamente prima dei varchi", correct: false, feedback: "⛔ Non più nei terminal moderni di Fiumicino grazie ai nuovi RX!" }
+      ]
+    },
+
+    // MISSIONE 7
+    {
+      mission: "MISSIONE 7 · Area Airside",
+      title: "Svuotata la vaschetta: E adesso?",
+      text: "Ritiri le tue cose dopo i controlli. Dove ti rimetti giacca e orologio?",
+      visual: null,
+      options: [
+        { text: "Prendo le mie cose, le sposto sui tavolini più avanti e mi sistemo comoda", correct: true, feedback: "✅ Bravissima! Liberi i rulli e ti vesti in totale relax." },
+        { text: "Mi fermo bloccata attaccata al nastro dei rulli", correct: false, feedback: "⛔ Ti intralci da sola e crei fastidio." }
+      ]
+    },
+    {
+      mission: "MISSIONE 7 · Area Airside",
+      title: "Il Tabellone Partenze",
+      text: "Sul tabellone vedi due voli per Barcellona alle 15:30. Il tuo biglietto riporta il volo **VY6107**. Dove ti dirigi?",
+      visual: "15:30 BARCELLONA VY6107 -> GATE A12",
+      options: [
+        { text: "Al Gate A12, perché corrisponde al codice esatto del mio volo", correct: true, feedback: "✅ Regola d'oro! Controlla sempre il numero di volo e non solo la destinazione." },
+        { text: "A un gate qualsiasi per Barcellona", correct: false, feedback: "⛔ Rischio altissimo di salire sull'aereo sbagliato!" }
+      ]
+    },
+    {
+      mission: "MISSIONE 7 · Area Airside",
+      title: "La Ricerca del Gate",
+      text: "Appena entrata nell'area partenze, qual è la prima cosa saggia da fare?",
+      visual: null,
+      options: [
+        { text: "Individuare fisicamente il gate per calcolare i tempi di cammino", correct: true, feedback: "✅ Perfetto! Prima sai dov'è la porta, poi ti godi i negozi." },
+        { text: "Fiondarsi subito al Duty Free senza guardare l'orario", correct: false, feedback: "⛔ Pericoloso: alcuni gate distano 15 minuti a piedi." }
+      ]
+    },
+
+    // MISSIONE 8
+    {
+      mission: "MISSIONE 8 · Imbarco e Aereo",
+      title: "La Fila e il Documento",
+      text: "Hai la tariffa Basic. In quale fila ti metti al gate e come gestisci il documento?",
+      visual: null,
+      options: [
+        { text: "Fila Regular e documento a portata di mano per eventuali controlli a campione", correct: true, feedback: "✅ Perfetto! Fila corretta e documento pronto." },
+        { text: "Fila Priority e documento sepolto in fondo alla valigia", correct: false, feedback: "⛔ La Priority è per chi ha l'extra e il documento serve sempre." }
+      ]
+    },
+    {
+      mission: "MISSIONE 8 · Imbarco e Aereo",
+      title: "A Bordo!",
+      text: "Sei salita sull'aereo con il tuo zainetto piccolo. Dove lo sistemi?",
+      visual: "✈️ CABINA AEREO",
+      options: [
+        { text: "Lo infilo sotto il sedile davanti a me", correct: true, feedback: "✅ Esatto! Le cappelliere sono riservate ai trolley grandi." },
+        { text: "Lo metto in alto nella cappelliera centrale", correct: false, feedback: "⛔ Quello spazio serve per i trolley dei passeggeri con bagaglio grande." }
+      ]
+    },
+    {
+      mission: "VITTORIA! ✈️",
+      title: "Sei arrivata al gate!",
+      text: "Hai fatto tutto quello che serviva in modo impeccabile. Ora sei una passeggera esperta a prova di errore. Buon volo a Barcellona!",
+      visual: null,
+      options: []
+    }
+  ];
+
+  let currentStep = 0;
+
+  function startGame() {
+    document.getElementById('home-screen').style.display = 'none';
+    document.getElementById('game-screen').style.display = 'flex';
+    currentStep = 0;
+    renderStep();
+  }
+
+  function renderStep() {
+    const data = steps[currentStep];
+    const pct = Math.round(((currentStep + 1) / steps.length) * 100);
+
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('progress-text').innerText = pct + '%';
+    document.getElementById('mission-tag').innerText = data.mission;
+    document.getElementById('screen-title').innerText = data.title;
+    document.getElementById('card-text').innerText = data.text;
+
+    const visualArea = document.getElementById('visual-area');
+    if (data.visual) {
+      visualArea.style.display = 'block';
+      visualArea.innerText = data.visual;
+    } else {
+      visualArea.style.display = 'none';
+    }
+
+    document.getElementById('feedback-box').className = 'feedback-notice';
+    document.getElementById('feedback-box').style.display = 'none';
+
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.style.display = 'none';
+
+    const container = document.getElementById('options-container');
+    container.innerHTML = '';
+
+    if (data.options.length === 0) {
+      // Schermata Finale
+      nextBtn.innerHTML = '<div class="btn-text"><span class="btn-main-label">RICOMINCIA 🔄</span></div><span class="arrow-icon">➔</span>';
+      nextBtn.style.display = 'flex';
+      nextBtn.onclick = () => {
+        document.getElementById('game-screen').style.display = 'none';
+        document.getElementById('home-screen').style.display = 'flex';
+      };
+      return;
+    }
+
+    data.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'opt-card';
+      btn.innerText = opt.text;
+      btn.onclick = () => selectOption(opt);
+      container.appendChild(btn);
+    });
+  }
+
+  function selectOption(opt) {
+    const box = document.getElementById('feedback-box');
+    box.innerText = opt.feedback;
+
+    if (opt.correct) {
+      box.className = 'feedback-notice correct';
+      document.getElementById('next-btn').innerHTML = '<div class="btn-text"><span class="btn-main-label">AVANTI</span></div><span class="arrow-icon">➔</span>';
+      document.getElementById('next-btn').style.display = 'flex';
+      document.getElementById('next-btn').onclick = nextStep;
+    } else {
+      box.className = 'feedback-notice incorrect';
+    }
+  }
+
+  function nextStep() {
+    if (currentStep < steps.length - 1) {
+      currentStep++;
+      renderStep();
+    }
+  }
+</script>
+
+</body>
+</html>
