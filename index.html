@@ -302,4 +302,145 @@
     },
     {
       mission: "MISSIONE 5 · Ai Varchi",
-      title: "5.5 La Mossa del
+      title: "5.5 La Mossa del Tornello",
+      text: "Sei davanti al tornello con la parte di vetro centrale illuminata. Come appoggi la carta d'imbarco dal telefono?",
+      visual: `<div class="turnstile-graphic"><div class="glass-panel">VETRO LETTORE</div></div>`,
+      options: [
+        { text: "[A] Lo faccio scorrere veloce di lato.", correct: false, feedback: "⛔ Il lettore non legge i movimenti veloci!" },
+        { text: "[B] Lo sventolo in alto a mezz'aria.", correct: false, feedback: "⛔ Troppo lontano dal vetro!" },
+        { text: "[C] Appoggio il barcode ben piatto sul vetro e aspetto 1 secondo immobile.", correct: true, feedback: "✅ BIP! Luce verde, ante aperte e si passa!" }
+      ]
+    },
+
+    // MISSIONE 6
+    {
+      mission: "MISSIONE 6 · Controlli di Sicurezza",
+      title: "6.1 In Coda",
+      text: "Mentre aspetti il tuo turno in fila ai controlli, cosa fai?",
+      visual: null,
+      options: [
+        { text: "[A] Tengo le cuffie con la musica a palla.", correct: false, feedback: "⛔ Cosi ti perdi le indicazioni degli addetti sulle file più veloci!" },
+        { text: "[B] Toglio le cuffie e ascolto le dritte degli addetti.", correct: true, feedback: "✅ Bravissima! Ascoltare gli addetti ti fa risparmiare un sacco di tempo." }
+      ]
+    },
+    {
+      mission: "MISSIONE 6 · Controlli di Sicurezza",
+      title: "6.2 Cosa vuol dire TASCHE VUOTE?",
+      text: "L'addetto ti dice: 'Svuoti completamente le tasche'. Cosa lasci dentro?",
+      visual: null,
+      options: [
+        { text: "[A] Lascio solo il cellulare e le sigarette.", correct: false, feedback: "⛔ Ahi! Fa scattare i controlli manuali!" },
+        { text: "[B] Lascio l'Oki e due caramelle.", correct: false, feedback: "⛔ Anche se non sono di metallo vanno tolti!" },
+        { text: "[C] NIENTE! Tasche vuote significa ZERO oggetti.", correct: true, feedback: "✅ Esatto! Tutto (incluso cellulare, caramelle e sigarette) va nella giacca o nello zaino!" }
+      ]
+    },
+    {
+      mission: "MISSIONE 6 · Controlli di Sicurezza",
+      title: "6.3 Gestione delle Vaschette",
+      text: "Ti accomodi in una delle 4 postazioni libere. Come utilizzi la vaschetta?",
+      visual: `<div class="tray-graphic">PIANO DI LAVORO</div>`,
+      options: [
+        { text: "[A] La metto subito sui rulli e la riempio li.", correct: false, feedback: "⛔ Mai sui rulli! Ostacoli gli altri." },
+        { text: "[B] Sfili da sotto ➔ appoggi sul piano ➔ metti tutto dentro ➔ spingi sui rulli.", correct: true, feedback: "✅ Sequenza perfetta! Piatto, ordinato e via sui rulli." }
+      ]
+    },
+
+    // MISSIONE 7
+    {
+      mission: "MISSIONE 7 · Area Airside",
+      title: "7.2 Il Tabellone Partenze",
+      text: "Sul tabellone vedi due voli per Barcellona alla stessa ora. Il tuo biglietto dice VY6107. Dove vai?",
+      visual: `<div class="fids-board">15:30 BARCELLONA VY6107 -> GATE A12<br>15:30 BARCELLONA IB5402 -> GATE B04</div>`,
+      options: [
+        { text: "[A] Al Gate B04, tanto vanno entrambi a Barcellona.", correct: false, feedback: "⛔ Errore! Quello è il volo di un'altra compagnia." },
+        { text: "[B] Al Gate A12, perché corrisponde al codice VY6107.", correct: true, feedback: "✅ Beccato! Guarda sempre il numero di volo!" }
+      ]
+    },
+
+    // FINALE
+    {
+      mission: "VITTORIA! ✈️",
+      title: "Sei pronta a volare!",
+      text: "Complimenti! Hai completato tutte le missioni di Facile Volare. Ora conosci ogni segreto per vivere l'aeroporto in totale relax!",
+      visual: null,
+      options: []
+    }
+  ];
+
+  let currentScreen = 0;
+
+  function renderScreen() {
+    const data = screens[currentScreen];
+    
+    // Progress
+    const progressPercent = ((currentScreen + 1) / screens.length) * 100;
+    document.getElementById('progress').style.width = progressPercent + '%';
+
+    document.getElementById('mission-title').innerText = data.mission;
+    document.getElementById('screen-title').innerText = data.title;
+    document.getElementById('friendly-text').innerText = data.text;
+
+    // Visual area
+    const visualArea = document.getElementById('visual-area');
+    if (data.visual) {
+      visualArea.style.display = 'flex';
+      visualArea.innerHTML = data.visual;
+    } else {
+      visualArea.style.display = 'none';
+    }
+
+    // Reset feedback & Next button
+    const feedbackBox = document.getElementById('feedback-box');
+    feedbackBox.className = 'feedback-box';
+    feedbackBox.style.display = 'none';
+    
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.style.display = 'none';
+
+    // Options
+    const optionsContainer = document.getElementById('options-container');
+    optionsContainer.innerHTML = '';
+
+    if (data.options.length === 0) {
+      // Screen finale
+      nextBtn.innerText = "RICOMINCIA 🔄";
+      nextBtn.style.display = 'block';
+      nextBtn.onclick = () => { currentScreen = 0; renderScreen(); };
+      return;
+    }
+
+    data.options.forEach((opt) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerText = opt.text;
+      btn.onclick = () => selectOption(opt);
+      optionsContainer.appendChild(btn);
+    });
+  }
+
+  function selectOption(option) {
+    const feedbackBox = document.getElementById('feedback-box');
+    feedbackBox.innerText = option.feedback;
+
+    if (option.correct) {
+      feedbackBox.className = 'feedback-box correct';
+      document.getElementById('next-btn').style.display = 'block';
+      document.getElementById('next-btn').onclick = nextScreen;
+    } else {
+      feedbackBox.className = 'feedback-box incorrect';
+    }
+  }
+
+  function nextScreen() {
+    if (currentScreen < screens.length - 1) {
+      currentScreen++;
+      renderScreen();
+    }
+  }
+
+  // Init
+  renderScreen();
+</script>
+
+</body>
+</html>
